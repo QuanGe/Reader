@@ -8,7 +8,6 @@
 
 #import "LSYReadUtilites.h"
 #import "LSYChapterModel.h"
-#import "ZipArchive.h"
 #import "TouchXML.h"
 
 @implementation LSYReadUtilites
@@ -139,33 +138,50 @@
 #pragma mark - 解压文件路径
 +(NSString *)unZip:(NSString *)path
 {
-    ZipArchive *zip = [[ZipArchive alloc] init];
-    NSString *zipFile = [[path stringByDeletingPathExtension] lastPathComponent];
-    if ([zip UnzipOpenFile:path]) {
+    if ([XADHelper canUncompressWith:path]) {
+        NSString *zipFile = [[path stringByDeletingPathExtension] lastPathComponent];
         NSString *zipPath = [NSString stringWithFormat:@"%@/%@",kDocuments,zipFile];
         NSFileManager *filemanager=[[NSFileManager alloc] init];
         if ([filemanager fileExistsAtPath:zipPath]) {
             NSError *error;
             [filemanager removeItemAtPath:zipPath error:&error];
+            
+            
         }
-        if ([zip UnzipFileTo:[NSString stringWithFormat:@"%@/",zipPath] overWrite:YES]) {
+        XADHelper *helper  = [XADHelper new];
+        int result = [helper unarchiverWithPath:path dest:zipPath password:nil];
+        if (result == XADNoError){
             return zipFile;
         }
     }
+    
+//    ZipArchive *zip = [[SSZipArchive alloc] init];
+//    NSString *zipFile = [[path stringByDeletingPathExtension] lastPathComponent];
+//    if ([zip UnzipOpenFile:path]) {
+//        NSString *zipPath = [NSString stringWithFormat:@"%@/%@",kDocuments,zipFile];
+//        NSFileManager *filemanager=[[NSFileManager alloc] init];
+//        if ([filemanager fileExistsAtPath:zipPath]) {
+//            NSError *error;
+//            [filemanager removeItemAtPath:zipPath error:&error];
+//        }
+//        if ([zip UnzipFileTo:[NSString stringWithFormat:@"%@/",zipPath] overWrite:YES]) {
+//            return zipFile;
+//        }
+//    }
     return nil;
 }
 #pragma mark - OPF文件路径
 +(NSString *)OPFPath:(NSString *)epubPath
 {
 
-    NSString *containerPath = [NSString stringWithFormat:@"%@/%@/META-INF/container.xml",kDocuments,epubPath];
+    NSString *containerPath = [NSString stringWithFormat:@"%@/%@/%@/META-INF/container.xml",kDocuments,epubPath,epubPath];
     //container.xml文件路径 通过container.xml获取到opf文件的路径
     NSFileManager *fileManager = [[NSFileManager alloc] init];
     if ([fileManager fileExistsAtPath:containerPath]) {
         CXMLDocument* document = [[CXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:containerPath] options:0 error:nil];
         CXMLNode* opfPath = [document nodeForXPath:@"//@full-path" error:nil];
         // xml文件中获取full-path属性的节点  full-path的属性值就是opf文件的绝对路径
-        NSString *path = [NSString stringWithFormat:@"%@/%@",epubPath,[opfPath stringValue]];
+        NSString *path = [NSString stringWithFormat:@"%@/%@/%@",epubPath,epubPath,[opfPath stringValue]];
         return path;
     } else {
         NSLog(@"ERROR: ePub not Valid");

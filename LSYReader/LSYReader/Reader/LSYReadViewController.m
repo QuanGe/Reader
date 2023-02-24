@@ -27,6 +27,7 @@
 }
 -(void)changeTheme:(NSNotification *)no
 {
+
     [LSYReadConfig shareInstance].theme = no.object;
     [self.view setBackgroundColor:[LSYReadConfig shareInstance].theme];
 }

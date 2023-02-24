@@ -29,6 +29,11 @@
     self.backgroundColor = [UIColor clearColor];
     [self addSubview:self.topView];
     [self addSubview:self.bottomView];
+    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.trailing.mas_equalTo(0);
+        make.bottom.mas_equalTo(0);
+        make.height.mas_equalTo(90 + [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom);
+    }];
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hiddenSelf)]];
 }
 -(LSYTopMenuView *)topView
@@ -88,7 +93,7 @@
     self.hidden = NO;
     [UIView animateWithDuration:animation?AnimationDelay:0 animations:^{
         _topView.frame = CGRectMake(0, 0, ViewSize(self).width, TopViewHeight);
-        _bottomView.frame = CGRectMake(0, ViewSize(self).height-BottomViewHeight, ViewSize(self).width,BottomViewHeight);
+        //_bottomView.frame = CGRectMake(0, ViewSize(self).height-BottomViewHeight, ViewSize(self).width,BottomViewHeight);
     } completion:^(BOOL finished) {
         
     }];
@@ -100,7 +105,7 @@
 {
     [UIView animateWithDuration:animation?AnimationDelay:0 animations:^{
         _topView.frame = CGRectMake(0, -TopViewHeight, ViewSize(self).width, TopViewHeight);
-         _bottomView.frame = CGRectMake(0, ViewSize(self).height, ViewSize(self).width,BottomViewHeight);
+         //_bottomView.frame = CGRectMake(0, ViewSize(self).height, ViewSize(self).width,BottomViewHeight);
     } completion:^(BOOL finished) {
         self.hidden = YES;
     }];

@@ -23,4 +23,6 @@
 @property (nonatomic,strong) LSYRecordModel *recordModel;   //阅读进度
 @property (nonatomic,strong) LSYReadView *readView;
 @property (nonatomic,weak) id<LSYReadViewControllerDelegate>delegate;
+@property (nonatomic,assign) NSInteger pageIndex;
+@property (nonatomic,assign) NSInteger chapterIndex;
 @end

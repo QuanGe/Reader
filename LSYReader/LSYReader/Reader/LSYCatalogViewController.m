@@ -19,23 +19,26 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _titleArray = @[@"目录",@"笔记",@"书签"];
+    _titleArray = @[NSLocalizedString(@"AllChapters", @"") /*,@"笔记",@"书签"*/];
     _VCArray = @[({
         LSYChapterVC *chapterVC = [[LSYChapterVC alloc]init];
         chapterVC.readModel = _readModel;
         chapterVC.delegate = self;
         chapterVC;
-    }),({
-        LSYNoteVC *noteVC = [[LSYNoteVC alloc] init];
-        noteVC.readModel = _readModel;
-        noteVC.delegate = self;
-        noteVC;
-    }),({
-        LSYMarkVC *markVC =[[LSYMarkVC alloc] init];
-        markVC.readModel = _readModel;
-        markVC.delegate = self;
-        markVC;
-    })];
+    }),
+//    ({
+//        LSYNoteVC *noteVC = [[LSYNoteVC alloc] init];
+//        noteVC.readModel = _readModel;
+//        noteVC.delegate = self;
+//        noteVC;
+//    }),
+//    ({
+//        LSYMarkVC *markVC =[[LSYMarkVC alloc] init];
+//        markVC.readModel = _readModel;
+//        markVC.delegate = self;
+//        markVC;
+//    })
+    ];
     self.forbidGesture = YES;
     self.delegate = self;
     self.dataSource = self;

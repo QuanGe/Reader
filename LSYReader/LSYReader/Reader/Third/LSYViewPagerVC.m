@@ -142,11 +142,11 @@
         arrayOfViewControllerButton = [mutableArrayOfBtn copy];
         arrayOfViewController = [mutableArrayOfVC copy];
     }
-    if ([self.dataSource respondsToSelector:@selector(headerViewForInViewPager:)]) {
-        [headerView removeFromSuperview];
-        headerView = [self.dataSource headerViewForInViewPager:self];
-        [self.view addSubview:headerView];
-    }
+//    if ([self.dataSource respondsToSelector:@selector(headerViewForInViewPager:)]) {
+//        [headerView removeFromSuperview];
+//        headerView = [self.dataSource headerViewForInViewPager:self];
+//        [self.view addSubview:headerView];
+//    }
     if (arrayOfViewController.count) {
         [_pageViewController setViewControllers:@[arrayOfViewController.firstObject] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
     }
@@ -216,13 +216,16 @@
 }
 -(void)viewDidLayoutSubviews
 {
+    /*
     headerView.frame = CGRectMake(0, self.topLayoutGuide.length, self.view.frame.size.width,[self.dataSource respondsToSelector:@selector(heightForHeaderOfViewPager:)]?[self.dataSource heightForHeaderOfViewPager:self]:0);
     _titleBackground.frame = CGRectMake(0, (headerView.frame.size.height)?headerView.frame.origin.y+headerView.frame.size.height:self.topLayoutGuide.length, self.view.frame.size.width,[self.dataSource respondsToSelector:@selector(heightForTitleOfViewPager:)]?[self.dataSource heightForTitleOfViewPager:self]:0);
     if (arrayOfViewControllerButton.count) {
         
         _titleBackground.contentSize = CGSizeMake(((UIButton *)arrayOfViewControllerButton.lastObject).frame.size.width+((UIButton *)arrayOfViewControllerButton.lastObject).frame.origin.x, _titleBackground.frame.size.height);
     }
-    _pageViewController.view.frame = CGRectMake(0, _titleBackground.frame.origin.y+_titleBackground.frame.size.height, self.view.frame.size.width, self.view.frame.size.height-(_titleBackground.frame.origin.y+_titleBackground.frame.size.height));
+     */
+    _pageViewController.view.frame = CGRectMake(0, [UIApplication sharedApplication].delegate.window.safeAreaInsets.top, self.view.frame.size.width, self.view.frame.size.height);
+     
 }
 #pragma maek 计算字体宽度
 -(CGFloat)p_fontText:(NSString *)text withFontHeight:(CGFloat)height

@@ -32,25 +32,64 @@
     return self;
 }
 -(void)setup{
-    [self setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.8]];
-    [self addSubview:self.slider];
+    [self setBackgroundColor:[UIColor colorWithWhite:0.2  alpha:0.8]];
+//    [self addSubview:self.slider];
     [self addSubview:self.catalog];
-    [self addSubview:self.progressView];
+//    [self addSubview:self.progressView];
     [self addSubview:self.lastChapter];
     [self addSubview:self.nextChapter];
     [self addSubview:self.increaseFont];
     [self addSubview:self.decreaseFont];
     [self addSubview:self.fontLabel];
-    [self addSubview:self.themeView];
+//    [self addSubview:self.themeView];
     [self addObserver:self forKeyPath:@"readModel.chapter" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"readModel.page" options:NSKeyValueObservingOptionNew context:NULL];
     [[LSYReadConfig shareInstance] addObserver:self forKeyPath:@"fontSize" options:NSKeyValueObservingOptionNew context:NULL];
+    
+    [self.lastChapter mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(16);
+        make.top.mas_equalTo(40);
+        make.height.mas_equalTo(44);
+    }];
+    
+    [self.nextChapter mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(-16);
+        make.top.mas_equalTo(40);
+        make.height.mas_equalTo(44);
+    }];
+    
+    [self.catalog mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(0);
+        make.top.mas_equalTo(40);
+        make.height.mas_equalTo(44);
+    }];
+    
+    [self.decreaseFont mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(16);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(40);
+    }];
+    
+    [self.increaseFont mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(-16);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(40);
+    }];
+    
+    [self.fontLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(0);
+        make.centerY.equalTo(self.decreaseFont);
+        make.width.mas_equalTo(100);
+        make.height.mas_equalTo(40);
+    }];
+    
+    
 }
 -(UIButton *)catalog
 {
     if (!_catalog) {
         _catalog = [LSYReadUtilites commonButtonSEL:@selector(showCatalog) target:self];
-        [_catalog setImage:[UIImage imageNamed:@"reader_cover"] forState:UIControlStateNormal];
+        [_catalog setTitle:NSLocalizedString(@"AllChapters", @"") forState:UIControlStateNormal];
     }
     return _catalog;
 }
@@ -83,7 +122,7 @@
 {
     if (!_nextChapter) {
         _nextChapter = [LSYReadUtilites commonButtonSEL:@selector(jumpChapter:) target:self];
-        [_nextChapter setTitle:@"下一章" forState:UIControlStateNormal];
+        [_nextChapter setTitle:NSLocalizedString(@"nextChapter", @"") forState:UIControlStateNormal];
     }
     return _nextChapter;
 }
@@ -91,7 +130,7 @@
 {
     if (!_lastChapter) {
         _lastChapter = [LSYReadUtilites commonButtonSEL:@selector(jumpChapter:) target:self];
-        [_lastChapter setTitle:@"上一章" forState:UIControlStateNormal];
+        [_lastChapter setTitle:NSLocalizedString(@"lastChapter", @"") forState:UIControlStateNormal];
     }
     return _lastChapter;
 }
@@ -100,9 +139,8 @@
     if (!_increaseFont) {
         _increaseFont = [LSYReadUtilites commonButtonSEL:@selector(changeFont:) target:self];
         [_increaseFont setTitle:@"A+" forState:UIControlStateNormal];
-        [_increaseFont.titleLabel setFont:[UIFont systemFontOfSize:17]];
-        _increaseFont.layer.borderWidth = 1;
-        _increaseFont.layer.borderColor = [UIColor whiteColor].CGColor;
+        //[_increaseFont.titleLabel setFont:[UIFont systemFontOfSize:17]];
+       
     }
     return _increaseFont;
 }
@@ -111,9 +149,8 @@
     if (!_decreaseFont) {
         _decreaseFont = [LSYReadUtilites commonButtonSEL:@selector(changeFont:) target:self];
         [_decreaseFont setTitle:@"A-" forState:UIControlStateNormal];
-        [_decreaseFont.titleLabel setFont:[UIFont systemFontOfSize:17]];
-        _decreaseFont.layer.borderWidth = 1;
-        _decreaseFont.layer.borderColor = [UIColor whiteColor].CGColor;
+        //[_decreaseFont.titleLabel setFont:[UIFont systemFontOfSize:17]];
+       
     }
     return _decreaseFont;
 }
@@ -228,15 +265,15 @@
 -(void)layoutSubviews
 {
     [super layoutSubviews];
-    _slider.frame = CGRectMake(50, 20, ViewSize(self).width-100, 30);
-    _lastChapter.frame = CGRectMake(5, 20, 40, 30);
-    _nextChapter.frame = CGRectMake(DistanceFromLeftGuiden(_slider)+5, 20, 40, 30);
-    _decreaseFont.frame = CGRectMake(10, DistanceFromTopGuiden(_slider)+10, (ViewSize(self).width-20)/3, 30);
-    _fontLabel.frame = CGRectMake(DistanceFromLeftGuiden(_decreaseFont), DistanceFromTopGuiden(_slider)+10, (ViewSize(self).width-20)/3,  30);
-    _increaseFont.frame = CGRectMake(DistanceFromLeftGuiden(_fontLabel), DistanceFromTopGuiden(_slider)+10,  (ViewSize(self).width-20)/3, 30);
-    _themeView.frame = CGRectMake(0, DistanceFromTopGuiden(_increaseFont)+10, ViewSize(self).width, 40);
-    _catalog.frame = CGRectMake(10, DistanceFromTopGuiden(_themeView), 30, 30);
-    _progressView.frame = CGRectMake(60, -60, ViewSize(self).width-120, 50);
+//    _slider.frame = CGRectMake(50, 20, ViewSize(self).width-100, 30);
+//    _lastChapter.frame = CGRectMake(5, 20, 40, 30);
+//    _nextChapter.frame = CGRectMake(DistanceFromLeftGuiden(_slider)+5, 20, 40, 30);
+//    _decreaseFont.frame = CGRectMake(10, DistanceFromTopGuiden(_slider)+10, (ViewSize(self).width-20)/3, 30);
+//    _fontLabel.frame = CGRectMake(DistanceFromLeftGuiden(_decreaseFont), DistanceFromTopGuiden(_slider)+10, (ViewSize(self).width-20)/3,  30);
+//    _increaseFont.frame = CGRectMake(DistanceFromLeftGuiden(_fontLabel), DistanceFromTopGuiden(_slider)+10,  (ViewSize(self).width-20)/3, 30);
+//    _themeView.frame = CGRectMake(0, DistanceFromTopGuiden(_increaseFont)+10, ViewSize(self).width, 40);
+//    _catalog.frame = CGRectMake(10, DistanceFromTopGuiden(_themeView), 30, 30);
+//    _progressView.frame = CGRectMake(60, -60, ViewSize(self).width-120, 50);
     
 }
 -(void)dealloc
@@ -314,7 +351,7 @@
 {
     self = [super init];
     if (self) {
-         [self setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.8]];
+         [self setBackgroundColor:[UIColor colorWithWhite:0.2  alpha:0.8]];
         [self addSubview:self.label];
     }
     return self;

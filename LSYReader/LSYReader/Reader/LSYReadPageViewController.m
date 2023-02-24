@@ -20,8 +20,8 @@
 
 @interface LSYReadPageViewController ()<UIPageViewControllerDelegate,UIPageViewControllerDataSource,LSYMenuViewDelegate,UIGestureRecognizerDelegate,LSYCatalogViewControllerDelegate,LSYReadViewControllerDelegate>
 {
-    NSUInteger _chapter;    //当前显示的章节
-    NSUInteger _page;       //当前显示的页数
+    //NSUInteger _chapter;    //当前显示的章节
+    //NSUInteger _page;       //当前显示的页数
     NSUInteger _chapterChange;  //将要变化的章节
     NSUInteger _pageChange;     //将要变化的页数
     BOOL _isTransition;     //是否开始翻页
@@ -32,6 +32,10 @@
 @property (nonatomic,strong) LSYCatalogViewController *catalogVC;   //侧边栏
 @property (nonatomic,strong) UIView * catalogView;  //侧边栏背景
 @property (nonatomic,strong) LSYReadViewController *readView;   //当前阅读视图
+
+@property (nonatomic,strong) UILabel* pageLabel;
+@property (nonatomic,strong) UILabel* chapterTitleLabel;
+
 @end
 
 @implementation LSYReadPageViewController
@@ -40,8 +44,8 @@
     [super viewDidLoad];
     [self addChildViewController:self.pageViewController];
     [_pageViewController setViewControllers:@[[self readViewWithChapter:_model.record.chapter page:_model.record.page]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
-    _chapter = _model.record.chapter;
-    _page = _model.record.page;
+    //_chapter = _model.record.chapter;
+    //_page = _model.record.page;
     [self.view addGestureRecognizer:({
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolMenu)];
         tap.delegate = self;
@@ -54,7 +58,39 @@
     [self.catalogView addSubview:self.catalogVC.view];
     //添加笔记
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addNotes:) name:LSYNoteNotification object:nil];
+    
+    [self.view addSubview:self.pageLabel];
+    [self.pageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(-16);
+        make.bottom.mas_equalTo( -10);
+        make.width.mas_equalTo(80);
+        make.height.mas_equalTo(30);
+    }];
+    
+    [self.view addSubview:self.chapterTitleLabel];
+    [self.chapterTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(-50);
+        make.bottom.mas_equalTo( -10);
+        make.leading.mas_equalTo(50);
+        make.height.mas_equalTo(30);
+    }];
 
+    [self refreshIndex];
+}
+
+- (LSYReadViewController *)visiblePageViewController {
+    return [[self.pageViewController viewControllers] firstObject];
+}
+
+- (void)refreshIndex {
+    
+    NSInteger curChapter = [self visiblePageViewController].chapterIndex;
+    NSInteger pageNum = _model.chapters[curChapter].pageCount;
+    NSInteger curPage = [self visiblePageViewController].pageIndex;
+    
+    self.chapterTitleLabel.text = _model.chapters[curChapter].title;
+    self.pageLabel.text = [NSString stringWithFormat:@"%@/%@",@(curPage + 1),@(pageNum)];
+    
 }
 
 -(void)addNotes:(NSNotification *)no
@@ -82,6 +118,8 @@
     state?(_menuView.topView.state=1): (_menuView.topView.state=0);
     [self.menuView showAnimation:YES];
     
+    
+    
 }
 
 #pragma mark - init
@@ -92,6 +130,12 @@
         _menuView.hidden = YES;
         _menuView.delegate = self;
         _menuView.recordModel = _model.record;
+        @weakify(self)
+        [RACObserve(self.menuView, hidden) subscribeNext:^(id x) {
+            @strongify(self)
+            self.pageLabel.hidden = !self.menuView.hidden;
+            self.chapterTitleLabel.hidden = self.pageLabel.hidden;
+        }];
     }
     return _menuView;
 }
@@ -254,6 +298,8 @@
         }
     }
     _readView = [[LSYReadViewController alloc] init];
+    _readView.pageIndex = page;
+    _readView.chapterIndex = chapter;
     _readView.recordModel = _model.record;
 //     NSLog(@"---%@",[NSURL fileURLWithPath:_model.chapters[chapter].chapterpath]);
     if (_model.type == ReaderEpub) {
@@ -281,8 +327,6 @@
 }
 -(void)updateReadModelWithChapter:(NSUInteger)chapter page:(NSUInteger)page
 {
-    _chapter = chapter;
-    _page = page;
     _model.record.chapterModel = _model.chapters[chapter];
     _model.record.chapter = chapter;
     _model.record.page = page;
@@ -311,8 +355,8 @@
 - (nullable UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
 {
 
-    _pageChange = _page;
-    _chapterChange = _chapter;
+    _pageChange = [self visiblePageViewController].pageIndex;
+    _chapterChange = [self visiblePageViewController].chapterIndex;
 
     if (_chapterChange==0 &&_pageChange == 0) {
         return nil;
@@ -331,8 +375,8 @@
 - (nullable UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
 {
 
-    _pageChange = _page;
-    _chapterChange = _chapter;
+    _pageChange = [self visiblePageViewController].pageIndex;
+    _chapterChange = [self visiblePageViewController].chapterIndex;
     if (_pageChange == _model.chapters.lastObject.pageCount-1 && _chapterChange == _model.chapters.count-1) {
         return nil;
     }
@@ -351,17 +395,19 @@
     if (!completed) {
         LSYReadViewController *readView = previousViewControllers.firstObject;
         _readView = readView;
-        _page = readView.recordModel.page;
-        _chapter = readView.recordModel.chapter;
+       
     }
     else{
-        [self updateReadModelWithChapter:_chapter page:_page];
+        [self updateReadModelWithChapter:[self visiblePageViewController].chapterIndex page:[self visiblePageViewController].pageIndex];
+        
+        [self refreshIndex];
     }
+    
 }
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray<UIViewController *> *)pendingViewControllers
 {
-    _chapter = _chapterChange;
-    _page = _pageChange;
+    
+    
 }
 -(void)viewDidLayoutSubviews
 {
@@ -371,5 +417,25 @@
 //    _catalogView.frame = CGRectMake(-ViewSize(self.view).width, 0, 2*ViewSize(self.view).width, ViewSize(self.view).height);
     _catalogVC.view.frame = CGRectMake(0, 0, ViewSize(self.view).width-100, ViewSize(self.view).height);
     [_catalogVC reload];
+}
+
+- (UILabel*)pageLabel {
+    if (_pageLabel == nil) {
+        _pageLabel = [UILabel new];
+        _pageLabel.textColor = [UIColor grayColor];
+        _pageLabel.textAlignment = NSTextAlignmentRight;
+        _pageLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:9];
+    }
+    return _pageLabel;
+}
+
+- (UILabel*)chapterTitleLabel {
+    if (_chapterTitleLabel == nil) {
+        _chapterTitleLabel = [UILabel new];
+        _chapterTitleLabel.textColor = [UIColor grayColor];
+        _chapterTitleLabel.textAlignment = NSTextAlignmentCenter;
+        _chapterTitleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:12];
+    }
+    return _chapterTitleLabel;
 }
 @end

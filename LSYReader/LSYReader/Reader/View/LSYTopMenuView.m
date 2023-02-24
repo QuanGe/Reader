@@ -8,6 +8,7 @@
 
 #import "LSYTopMenuView.h"
 #import "LSYMenuView.h"
+#import "LSYReadUtilites.h"
 @interface LSYTopMenuView ()
 @property (nonatomic,strong) UIButton *back;
 @property (nonatomic,strong) UIButton *more;
@@ -23,9 +24,9 @@
 }
 -(void)setup
 {
-    [self setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.8]];
+    [self setBackgroundColor:[UIColor colorWithWhite:0.2  alpha:0.8]];
     [self addSubview:self.back];
-    [self addSubview:self.more];
+    //[self addSubview:self.more];
 }
 -(void)setState:(BOOL)state
 {

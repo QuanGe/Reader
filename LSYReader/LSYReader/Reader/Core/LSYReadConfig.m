@@ -77,4 +77,19 @@
     }
     return self;
 }
+- (UIColor*)theme {
+    if ([ZipymCommon isDarmUI]) {
+        return [UIColor blackColor];
+    }else {
+        return [UIColor whiteColor];
+    }
+}
+
+- (UIColor*)fontColor {
+    if ([ZipymCommon isDarmUI]) {
+        return [UIColor whiteColor];
+    }else {
+        return [UIColor blackColor];
+    }
+}
 @end
