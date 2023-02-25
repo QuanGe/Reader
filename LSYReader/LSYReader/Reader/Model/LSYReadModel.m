@@ -102,6 +102,9 @@
     NSKeyedUnarchiver *unarchive = [[NSKeyedUnarchiver alloc]initForReadingWithData:data];
     //主线程操作
     LSYReadModel *model = [unarchive decodeObjectForKey:key];
+    if (model.record.page >= model.record.chapterModel.pageCount) {
+        model.record.page = 0;
+    }
     return model;
 }
 @end
