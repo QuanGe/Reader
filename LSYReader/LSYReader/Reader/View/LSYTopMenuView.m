@@ -32,10 +32,10 @@
 {
     _state = state;
     if (state) {
-        [_more setImage:[[UIImage imageNamed:@"sale_discount_yellow"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]forState:UIControlStateNormal];
+        [_more setImage:[[UIImage imageNamed:@"_yellow"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]forState:UIControlStateNormal];
         return;
     }
-    [_more setImage:[[UIImage imageNamed:@"sale_discount_yellow"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]forState:UIControlStateNormal];
+    [_more setImage:[[UIImage imageNamed:@"_yellow"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]forState:UIControlStateNormal];
 }
 -(UIButton *)back
 {
@@ -49,7 +49,7 @@
 {
     if (!_more) {
         _more = [LSYReadUtilites commonButtonSEL:@selector(moreOption) target:self];
-        [_more setImage:[[UIImage imageNamed:@"sale_discount_yellow"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]forState:UIControlStateNormal];
+        [_more setImage:[[UIImage imageNamed:@"_yellow"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]forState:UIControlStateNormal];
         [_more setImageEdgeInsets:UIEdgeInsetsMake(7.5, 12.5, 7.5, 12.5)];
     }
     return _more;
