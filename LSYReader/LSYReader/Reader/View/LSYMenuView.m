@@ -28,6 +28,11 @@
 {
     self.backgroundColor = [UIColor clearColor];
     [self addSubview:self.topView];
+    [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.trailing.mas_equalTo(0);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(40 + [[UIApplication sharedApplication] delegate].window.safeAreaInsets.top);
+    }];
     [self addSubview:self.bottomView];
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.trailing.mas_equalTo(0);
@@ -91,24 +96,14 @@
 -(void)showAnimation:(BOOL)animation
 {
     self.hidden = NO;
-    [UIView animateWithDuration:animation?AnimationDelay:0 animations:^{
-        _topView.frame = CGRectMake(0, 0, ViewSize(self).width, TopViewHeight);
-        //_bottomView.frame = CGRectMake(0, ViewSize(self).height-BottomViewHeight, ViewSize(self).width,BottomViewHeight);
-    } completion:^(BOOL finished) {
-        
-    }];
+
     if ([self.delegate respondsToSelector:@selector(menuViewDidAppear:)]) {
         [self.delegate menuViewDidAppear:self];
     }
 }
 -(void)hiddenAnimation:(BOOL)animation
 {
-    [UIView animateWithDuration:animation?AnimationDelay:0 animations:^{
-        _topView.frame = CGRectMake(0, -TopViewHeight, ViewSize(self).width, TopViewHeight);
-         //_bottomView.frame = CGRectMake(0, ViewSize(self).height, ViewSize(self).width,BottomViewHeight);
-    } completion:^(BOOL finished) {
-        self.hidden = YES;
-    }];
+    self.hidden = YES;
     if ([self.delegate respondsToSelector:@selector(menuViewDidHidden:)]) {
         [self.delegate menuViewDidHidden:self];
     }

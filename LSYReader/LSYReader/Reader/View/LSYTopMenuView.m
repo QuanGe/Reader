@@ -26,6 +26,11 @@
 {
     [self setBackgroundColor:[UIColor colorWithWhite:0.2  alpha:0.8]];
     [self addSubview:self.back];
+    [self.back mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(0);
+        make.bottom.mas_equalTo(0);
+        make.width.height.mas_equalTo(40);
+    }];
     //[self addSubview:self.more];
 }
 -(void)setState:(BOOL)state
@@ -67,7 +72,7 @@
 -(void)layoutSubviews
 {
     [super layoutSubviews];
-    _back.frame = CGRectMake(0, 24, 40, 40);
+    //_back.frame = CGRectMake(0, 24, 40, 40);
     _more.frame = CGRectMake(ViewSize(self).width-50, 24, 40, 40);
 }
 /*
