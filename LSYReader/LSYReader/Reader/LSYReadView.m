@@ -46,9 +46,21 @@
             pan;
         })];
         
-        
+        UIAccessibilityCustomAction * action2 = [[UIAccessibilityCustomAction alloc] initWithName:NSLocalizedString(@"showActionMenu", @"show action menu") target:self selector:@selector(resetMenu)];
+
+        self.isAccessibilityElement = YES;
+        self.accessibilityCustomActions = @[action2];
     }
     return self;
+}
+
+- (NSString *)accessibilityLabel {
+    return self.content ;
+}
+
+- (BOOL)resetMenu {
+    [[NSNotificationCenter defaultCenter] postNotificationName:LSYShowToolBar object:nil];
+    return YES;
 }
 #pragma mark - Magnifier View
 -(void)showMagnifier

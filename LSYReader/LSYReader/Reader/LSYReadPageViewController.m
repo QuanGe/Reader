@@ -58,6 +58,7 @@
     [self.catalogView addSubview:self.catalogVC.view];
     //添加笔记
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addNotes:) name:LSYNoteNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showToolMenu) name:LSYShowToolBar object:nil];
     
     [self.view addSubview:self.pageLabel];
     [self.pageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -111,6 +112,7 @@
 }
 -(void)showToolMenu
 {
+    [self.view addSubview:self.menuView];
     [_readView.readView cancelSelected];
     NSString * key = [NSString stringWithFormat:@"%d_%d",(int)_model.record.chapter,(int)_model.record.page];
     
@@ -280,6 +282,12 @@
 
 
 }
+
+- (BOOL)resetMenu {
+    self.menuView = nil;
+    [self.view addSubview:self.menuView];
+    return YES;
+}
 #pragma mark - Create Read View Controller
 
 -(LSYReadViewController *)readViewWithChapter:(NSUInteger)chapter page:(NSUInteger)page{
@@ -301,6 +309,7 @@
     _readView.pageIndex = page;
     _readView.chapterIndex = chapter;
     _readView.recordModel = _model.record;
+    
 //     NSLog(@"---%@",[NSURL fileURLWithPath:_model.chapters[chapter].chapterpath]);
     if (_model.type == ReaderEpub) {
         _readView.type = ReaderEpub;
