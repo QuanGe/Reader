@@ -10,7 +10,6 @@
 #import "LSYMenuView.h"
 #import "LSYReadUtilites.h"
 @interface LSYTopMenuView ()
-@property (nonatomic,strong) UIButton *back;
 @property (nonatomic,strong) UIButton *more;
 @end
 @implementation LSYTopMenuView

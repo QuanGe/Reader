@@ -28,7 +28,7 @@
 }
 @property (nonatomic,strong) UIPageViewController *pageViewController;
 @property (nonatomic,getter=isShowBar) BOOL showBar; //是否显示状态栏
-@property (nonatomic,strong) LSYMenuView *menuView; //菜单栏
+
 @property (nonatomic,strong) LSYCatalogViewController *catalogVC;   //侧边栏
 @property (nonatomic,strong) UIView * catalogView;  //侧边栏背景
 @property (nonatomic,strong) LSYReadViewController *readView;   //当前阅读视图

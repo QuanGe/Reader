@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "LSYReadModel.h"
+#import "LSYMenuView.h"
 @interface LSYReadPageViewController : UIViewController
 @property (nonatomic,strong) NSURL *resourceURL;
 @property (nonatomic,strong) LSYReadModel *model;
+@property (nonatomic,strong) LSYMenuView *menuView; //菜单栏
 //+(void)loadURL:(NSURL *)url;
 @end
