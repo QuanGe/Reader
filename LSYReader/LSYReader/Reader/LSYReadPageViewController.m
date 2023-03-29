@@ -340,6 +340,7 @@
     _model.record.chapter = chapter;
     _model.record.page = page;
     [LSYReadModel updateLocalModel:_model url:_resourceURL];
+    [self refreshIndex];
 }
 #pragma mark - Read View Controller Delegate
 -(void)readViewEndEdit:(LSYReadViewController *)readView
